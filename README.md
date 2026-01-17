@@ -68,6 +68,20 @@ Client → Auth (JWT) → Guards → Controllers → Services → Prisma → Pos
 - Garantiza la misma versión de servicios para todo el equipo
 - Simplifica el onboarding y el deploy**
 
+***Secrets*** 🔐 
+
+El proyecto utiliza una carpeta `secrets/` para almacenar información sensible
+(claves, tokens, certificados).
+
+Por razones de seguridad:
+
+- La carpeta `secrets/` **no se versiona**
+- Está incluida en `.gitignore`
+- Solo se provee una plantilla (`secrets.template/`) como referencia
+
+Cada entorno debe crear su propia carpeta `secrets/` localmente o configurar
+los secretos mediante variables de entorno o el proveedor de infraestructura.
+
 ## Objetivo del proyecto 📌 
 
 ### Este proyecto sirve como:
