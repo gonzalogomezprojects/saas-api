@@ -4,10 +4,13 @@ import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { setupSwagger } from './swagger/swagger.setup';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
   app.useLogger(app.get(Logger));
+  app.flushLogs();
 
   app.setGlobalPrefix('api/v1');
 
