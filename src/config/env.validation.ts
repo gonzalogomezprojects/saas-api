@@ -17,4 +17,8 @@ export const envValidationSchema = Joi.object({
 
   SWAGGER_ENABLED: Joi.boolean().default(true),
   SWAGGER_PATH: Joi.string().default('docs'),
+
+  AUTH_REFRESH_COOKIE_NAME: Joi.string().default('rt'),
+  AUTH_COOKIE_SECURE: Joi.boolean().default(false),
+  AUTH_COOKIE_SAMESITE: Joi.string().default('lax'),
 });

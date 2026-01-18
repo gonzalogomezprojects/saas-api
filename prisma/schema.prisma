@@ -34,35 +34,36 @@ enum TicketType {
 }
 
 model Tenant {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  createdAt DateTime @default(now())
-
-  users     User[]
-  clients   Client[]
-  orders    Order[]
-  tickets   Ticket[]
+  id         String      @id @default(cuid())
+  name       String
+  slug       String      @unique
+  createdAt  DateTime    @default(now())
+  domain     String?     @unique
+  
+  users      User[]
+  clients    Client[]
+  orders     Order[]
+  tickets    Ticket[]
   orderItems OrderItem[]
 
   @@index([createdAt])
 }
 
 model User {
-  id           String   @id @default(cuid())
-  tenantId     String
-  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   email        String
   passwordHash String
-  role         Role     @default(USER)
-  isActive     Boolean  @default(true)
+  role         Role    @default(USER)
+  isActive     Boolean @default(true)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   refreshTokens   RefreshToken[]
-  assignedTickets Ticket[] @relation("TicketAssignedTo")
+  assignedTickets Ticket[]       @relation("TicketAssignedTo")
 
   @@unique([tenantId, email])
   @@index([tenantId])
@@ -71,9 +72,10 @@ model User {
 }
 
 model RefreshToken {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jti    String @unique
 
   tokenHash String
   expiresAt DateTime
@@ -86,19 +88,19 @@ model RefreshToken {
 }
 
 model Client {
-  id        String   @id @default(cuid())
-  tenantId  String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  name      String
-  email     String?
-  phone     String?
+  name  String
+  email String?
+  phone String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders    Order[]
-  tickets   Ticket[]
+  orders  Order[]
+  tickets Ticket[]
 
   @@index([tenantId])
   @@index([tenantId, name])
@@ -106,23 +108,23 @@ model Client {
 }
 
 model Order {
-  id          String      @id @default(cuid())
-  tenantId    String
-  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  clientId    String
-  client      Client      @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
 
-  status      OrderStatus @default(PENDING)
+  status OrderStatus @default(PENDING)
 
-  totalCents  Int         @default(0) // total en centavos
-  notes       String?
+  totalCents Int     @default(0) // total en centavos
+  notes      String?
 
-  items       OrderItem[]
-  tickets     Ticket[]
+  items   OrderItem[]
+  tickets Ticket[]
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([tenantId])
   @@index([tenantId, clientId])
@@ -131,46 +133,46 @@ model Order {
 }
 
 model OrderItem {
-  id          String   @id @default(cuid())
-  tenantId    String
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  orderId     String
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   description String
-  amountCents Int      // monto del concepto en centavos
+  amountCents Int // monto del concepto en centavos
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([tenantId])
   @@index([orderId])
 }
 
 model Ticket {
-  id           String       @id @default(cuid())
-  tenantId     String
-  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  type         TicketType   @default(CUSTOMER)
-  title        String
-  description  String?
-  status       TicketStatus @default(OPEN)
+  type        TicketType   @default(CUSTOMER)
+  title       String
+  description String?
+  status      TicketStatus @default(OPEN)
 
   // Ticket puede estar ligado a un cliente (soporte) aunque no exista order
-  clientId     String?
-  client       Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   // Ticket puede estar ligado a una orden (post-venta / seguimiento)
-  orderId      String?
-  order        Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
 
   // Asignación interna
   assignedToId String?
-  assignedTo   User?        @relation("TicketAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedTo   User?   @relation("TicketAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
 
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([tenantId])
   @@index([tenantId, type])
