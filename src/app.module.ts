@@ -5,6 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { envValidationSchema } from './config/env.validation';
 import { LoggingModule } from './logging/logging.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { HealthService } from './health/health.service';
+import { HealthController } from './health/health.controller';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -15,8 +19,10 @@ import { LoggingModule } from './logging/logging.module';
       cache: true,
     }),
     LoggingModule,
+    PrismaModule,
+    HealthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, HealthController],
+  providers: [AppService, HealthService],
 })
 export class AppModule {}

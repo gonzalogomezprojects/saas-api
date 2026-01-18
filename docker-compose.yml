@@ -5,7 +5,7 @@ services:
     image: postgres:15.3
     restart: unless-stopped
     ports:
-      - "5433:5435"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: saas-api
