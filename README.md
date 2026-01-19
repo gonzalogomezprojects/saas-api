@@ -92,6 +92,55 @@ los secretos mediante variables de entorno o el proveedor de infraestructura.
 
 - Portfolio técnico para posiciones Backend / Full Stack
 
+##  Cómo correr el proyecto (rápido) - :D 🚀
+
+### Requisitos
+- Node.js (LTS)
+- npm
+- Docker + Docker Compose (recomendado para PostgreSQL)
+
+---
+
+## Instalación 📦 
+```bash
+git clone <TU_REPO_URL>
+cd saas-api
+npm install
+```
+
+##  Variables de entorno y secrets 🔐
+```bash
+cp .env.example .env
+
+cp -r secrets.template secrets
+```
+
+##  Levantar PostgreSQL con Docker  🐳
+```bash
+docker compose up -d
+```
+
+##  Prisma + Base de datos 🗄️
+```bash
+npx prisma generate
+npx prisma migrate dev
+
+seed:
+
+npm run prisma:seed
+npx prisma generate
+```
+
+## Correr la API en local ▶️
+```bash
+npm run start:dev
+```
+
+## Swagger ▶️
+```bash
+[npm run start:dev](http://localhost:3000/docs)
+```
+
 ## Autor 🧠
 
 Gonzalo Gómez
