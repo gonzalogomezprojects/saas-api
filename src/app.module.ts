@@ -16,6 +16,7 @@ import { HealthController } from './health/health.controller';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from './auth/auth.module';
 import { TenantResolverMiddleware } from './tenant/tenant-resolver.middleware';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TenantResolverMiddleware } from './tenant/tenant-resolver.middleware';
     PrismaModule,
     HealthModule,
     AuthModule,
+    ClientsModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, HealthService],
