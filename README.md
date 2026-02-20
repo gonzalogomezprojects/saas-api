@@ -1,4 +1,23 @@
+# SaaS API – Multi-tenant Backend (NestJS)
 
+Professional backend API for a **multi-tenant SaaS platform**, built with **NestJS**, following clean architecture principles, strong tenant isolation, and production-ready practices.
+
+This project serves as a solid backend foundation designed for scalability, security, and maintainability.
+
+---
+
+## Overview
+
+The system is built around strict **tenant isolation** and modular architecture.
+
+Each authenticated request:
+
+- Contains a `tenantId`
+- Is validated via JWT
+- Is filtered at the service/data layer level
+- Never trusts tenant input from the request body
+
+Architecture flow:
 ---
 
 ## Core Features
